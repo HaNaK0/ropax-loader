@@ -41,3 +41,6 @@ luac.out
 
 # packed love files
 *.love
+
+#logs 
+log/
