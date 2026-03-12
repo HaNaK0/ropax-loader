@@ -44,3 +44,6 @@ luac.out
 
 #logs 
 log/
+
+#Config file
+conf.lua
