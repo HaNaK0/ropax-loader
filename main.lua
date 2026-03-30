@@ -2,12 +2,14 @@ local log = require('log')
 local game = require('game.game')
 local wheels = require('game.wheel')
 
+local objects = {}
+
 ---@type WheelParam
 local default_wheel = {
 	width = 10,
 	diameter = 33,
-	engine_force = 1,
-	braking_force = 1,
+	engine_force = 100,
+	braking_force = 100,
 	mass = 10,
 	foreward_dyn_friction = 1,
 	foreward_static_friction = 1,
@@ -24,17 +26,22 @@ function love.load()
 
 	love.graphics.setBackgroundColor(0.41, 0.53, 0.97)
 
-	Game = game.newGame()
-	table.insert(Game.objects, wheels.create_wheel(default_wheel, World, 100, 100))
+	objects.wheel = wheels.create_wheel(default_wheel, World, 100, 100)
 end
 
 function love.update(dt)
 	log:update(dt)
 	World:update(dt)
+
+	if love.keyboard.isDown("w") then
+		wheels.accelerate(objects.wheel, true)
+	elseif love.keyboard.isDown("s") then
+		wheels.brake(objects.wheel)
+	end
 end
 
 function love.draw()
 	log:draw()
 
-	Game:draw()
+	wheels.draw_wheel(objects.wheel)
 end
