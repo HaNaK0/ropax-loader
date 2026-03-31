@@ -49,14 +49,19 @@ function wheel.draw_wheel(a_wheel)
 
 	local foreward = util.get_body_foreward(a_wheel.body)
 	util.draw_vector(vector.new(a_wheel.body:getPosition()), foreward * 32)
-	local pX, pY = a_wheel.body:getPosition()
-	love.graphics.line(pX, pY, pX + foreward.x * 32, pY + foreward.y * 32)
+
 end
 
 --- Update function for a wheel
 ---@param dt number
----@param a_wheel? Wheel
+---@param a_wheel Wheel
 function wheel.update_wheel(dt, a_wheel)
+	local direction_normal = util.get_normal(util.get_body_foreward(a_wheel.body))
+	local velocity = vector.new(a_wheel.body:getLinearVelocity())
+	local side_velocity = velocity:dot(direction_normal)
+	local side_friction = direction_normal * -side_velocity * a_wheel.body:getMass()
+
+	a_wheel.body:applyLinearImpulse(side_friction.x, side_friction.y)
 end
 
 --- Accelerate the wheel with the given force with positive in the foreward direction

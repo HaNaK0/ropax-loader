@@ -2,14 +2,14 @@ local vector = require('util.vector')
 
 local util = {}
 
---- Get the foreward vector of a physics body
----@param body love.Body
+--- Get a vector pointing in the foreward direction of a physics body
+---@param body love.Body a physics body to get the angle from 
 ---@return Vector.lua
 function util.get_body_foreward(body)
 	return vector.fromAngle(-body:getAngle())
 end
 
---- get a vector that is perpendicular to the given vector
+--- Get a vector that is perpendicular to the given vector
 ---@param vec Vector.lua
 ---@return Vector.lua
 function util.get_normal(vec)

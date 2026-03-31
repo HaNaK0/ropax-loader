@@ -33,6 +33,8 @@ function love.update(dt)
 	log:update(dt)
 	World:update(dt)
 
+	wheels.update_wheel(dt, objects.wheel)
+
 	if love.keyboard.isDown("w") then
 		wheels.accelerate(objects.wheel, true)
 	elseif love.keyboard.isDown("s") then
