@@ -28,8 +28,10 @@ function wheel.create_wheel(desc, world, x, y)
 	---@field body love.Body
 	---@field fixture love.Fixture
 	---@field shape love.PolygonShape
+	---@field turn_target number the terget turning angle
 	local new_wheel = {
 		desc = desc,
+		turn_target = 0,
 	}
 
 	new_wheel.body = love.physics.newBody(world, x, y, "dynamic")
@@ -44,6 +46,11 @@ end
 function wheel.draw_wheel(a_wheel)
 	love.graphics.setColor(0.282, 1, 0)
 	love.graphics.polygon("line", a_wheel.body:getWorldPoints(a_wheel.shape:getPoints()))
+
+	local foreward = util.get_body_foreward(a_wheel.body)
+	util.draw_vector(vector.new(a_wheel.body:getPosition()), foreward * 32)
+	local pX, pY = a_wheel.body:getPosition()
+	love.graphics.line(pX, pY, pX + foreward.x * 32, pY + foreward.y * 32)
 end
 
 --- Update function for a wheel
@@ -70,7 +77,7 @@ function wheel.brake(a_wheel)
 	local vel_x, vel_y = a_wheel.body:getLinearVelocity()
 	local velocity = vector.new(vel_x, vel_y)
 
-	local foreward_velociy = util.dot_product(velocity, foreward)
+	local foreward_velociy = velocity:dot(foreward)
 	local braking_force = math.min(a_wheel.desc.braking_force, foreward_velociy ^ 2 * a_wheel.body:getMass() * 0.5)
 	local braking_vector = foreward * braking_force * -1
 

@@ -6,7 +6,7 @@ local util = {}
 ---@param body love.Body
 ---@return Vector.lua
 function util.get_body_foreward(body)
-	return vector.fromAngle(body:getAngle())
+	return vector.fromAngle(-body:getAngle())
 end
 
 --- get a vector that is perpendicular to the given vector

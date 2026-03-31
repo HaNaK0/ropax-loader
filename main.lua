@@ -38,6 +38,13 @@ function love.update(dt)
 	elseif love.keyboard.isDown("s") then
 		wheels.brake(objects.wheel)
 	end
+
+	local wheel_angle = objects.wheel.body:getAngle()
+	if love.keyboard.isDown("d") then
+		objects.wheel.body:setAngle(wheel_angle + 0.3 * math.pi * dt)
+	elseif love.keyboard.isDown("a") then
+		objects.wheel.body:setAngle(wheel_angle + -0.3 * math.pi * dt)
+	end
 end
 
 function love.draw()
