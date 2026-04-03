@@ -1,21 +1,8 @@
 local log = require('log')
-local game = require('game.game')
 local wheels = require('game.wheel')
+local vehicles = require('game.vehicles')
 
 local objects = {}
-
----@type WheelParam
-local default_wheel = {
-	width = 10,
-	diameter = 33,
-	engine_force = 100,
-	braking_force = 100,
-	mass = 10,
-	foreward_dyn_friction = 1,
-	foreward_static_friction = 1,
-	side_dyn_friction = 1,
-	side_static_friction = 1,
-}
 
 function love.load()
 	log:setup()
@@ -26,31 +13,37 @@ function love.load()
 
 	love.graphics.setBackgroundColor(0.41, 0.53, 0.97)
 
-	objects.wheel = wheels.create_wheel(default_wheel, World, 100, 100)
+	objects.tugmaster = vehicles.create_vehicle(World, require('game.vehicles.tugmaster'))
 end
 
 function love.update(dt)
 	log:update(dt)
 	World:update(dt)
 
-	wheels.update_wheel(dt, objects.wheel)
+	vehicles.update_vehicle(dt, objects.tugmaster)
 
 	if love.keyboard.isDown("w") then
-		wheels.accelerate(objects.wheel, true)
+		--wheels.accelerate(objects.wheel, true)
+		vehicles.accelerate_vehicle(objects.tugmaster)
 	elseif love.keyboard.isDown("s") then
-		wheels.brake(objects.wheel)
+		--wheels.brake(objects.wheel)
+		vehicles.brake(objects.tugmaster)
 	end
 
-	local wheel_angle = objects.wheel.body:getAngle()
+	--local wheel_angle = objects.wheel.body:getAngle()
+	local steering_angle = vehicles.get_steeringAngle(objects.tugmaster)
 	if love.keyboard.isDown("d") then
-		objects.wheel.body:setAngle(wheel_angle + 0.3 * math.pi * dt)
+		--objects.wheel.body:setAngle(wheel_angle + 0.3 * math.pi * dt)
+		vehicles.steer_vehicle(objects.tugmaster, steering_angle + 0.3 * math.pi * dt)
 	elseif love.keyboard.isDown("a") then
-		objects.wheel.body:setAngle(wheel_angle + -0.3 * math.pi * dt)
+		--objects.wheel.body:setAngle(wheel_angle + -0.3 * math.pi * dt)
+		vehicles.steer_vehicle(objects.tugmaster, steering_angle - 0.3 * math.pi * dt)
 	end
 end
 
 function love.draw()
 	log:draw()
 
-	wheels.draw_wheel(objects.wheel)
+	love.graphics.setColor(0.282, 1, 0)
+	vehicles.draw_vehicle(objects.tugmaster)
 end
